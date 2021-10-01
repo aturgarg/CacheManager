@@ -38,7 +38,6 @@ namespace Microsoft.Extensions.Configuration
         private const string TypeMsExtensionMemoryCacheHandle = "CacheManager.MicrosoftCachingMemory.MemoryCacheHandle`1, CacheManager.Microsoft.Extensions.Caching.Memory";
         private const string TypeRedisConfiguration = "CacheManager.Redis.RedisConfiguration, CacheManager.StackExchange.Redis";
         private const string TypeRedisConfigurations = "CacheManager.Redis.RedisConfigurations, CacheManager.StackExchange.Redis";
-        private const string KnonwSerializerBinary = "binary";
         private const string KnonwSerializerJson = "json";
         private const string KnonwSerializerGzJson = "gzjson";
         private const string KnonwSerializerProto = "protobuf";
