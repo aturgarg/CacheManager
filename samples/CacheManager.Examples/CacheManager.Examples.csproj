@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>CacheManager.Examples Console Application</Description>
     <Authors>MICHA</Authors>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <AssemblyName>CacheManager.Examples</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>CacheManager.Examples</PackageId>
@@ -27,7 +27,7 @@
     <ProjectReference Include="..\..\src\CacheManager.StackExchange.Redis\CacheManager.StackExchange.Redis.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <ProjectReference Include="..\..\src\CacheManager.SystemRuntimeCaching\CacheManager.SystemRuntimeCaching.csproj" />
   </ItemGroup>
 

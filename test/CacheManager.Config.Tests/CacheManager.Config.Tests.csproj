@@ -4,7 +4,7 @@
     <Description>CacheManager is an open source caching abstraction layer for .NET written in C#. It supports various cache providers and implements many advanced features.</Description>
     <VersionPrefix>1.0.1</VersionPrefix>
     <Authors>MichaConrad</Authors>
-    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
     <AssemblyName>CacheManager.Config.Tests</AssemblyName>
     <OutputType>Exe</OutputType>
     <AssemblyOriginatorKeyFile>../../tools/key.snk</AssemblyOriginatorKeyFile>
@@ -32,7 +32,7 @@
 	<ProjectReference Include="..\..\src\CacheManager.SystemRuntimeCaching\CacheManager.SystemRuntimeCaching.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <ProjectReference Include="..\..\src\CacheManager.Memcached\CacheManager.Memcached.csproj" />    
     <Reference Include="System.Configuration" />
   </ItemGroup>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>
-      net461;netcoreapp2.1;
+      net472;netcoreapp2.1;
     </TargetFrameworks>
     <Version>1.0.0</Version>
     <AssemblyName>CacheManager.Tests</AssemblyName>
@@ -57,7 +57,7 @@
     <PackageReference Include="FluentAssertions" Version="5.4.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <ProjectReference Include="..\..\src\CacheManager.Web\CacheManager.Web.csproj" />
     <ProjectReference Include="..\..\src\CacheManager.Memcached\CacheManager.Memcached.csproj" />
     <Reference Include="System.Web" />
@@ -68,13 +68,13 @@
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <DefineConstants>$(DefineConstants);REDISENABLED;MOCK_HTTPCONTEXT_ENABLED;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
     <DefineConstants>$(DefineConstants);REDISENABLED;NETCOREAPP2;</DefineConstants>
   </PropertyGroup>
-  <!--<PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <!--<PropertyGroup Condition=" '$(TargetFramework)' == 'net4722' ">
     <DefineConstants>$(DefineConstants);REDISENABLED;MOCK_HTTPCONTEXT_ENABLED;NO_APP_CONFIG;MEMCACHEDENABLED;COUCHBASEENABLED;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">

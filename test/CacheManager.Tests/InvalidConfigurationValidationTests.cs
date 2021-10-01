@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using CacheManager.Core;
+using CacheCore = CacheManager.Core;
 using CacheManager.Core.Configuration;
 using CacheManager.Core.Internal;
 using FluentAssertions;
@@ -20,7 +20,7 @@ namespace CacheManager.Tests
         public void Cfg_BuildConfiguration_MissingSettings()
         {
             // arrange act
-            Action act = () => ConfigurationBuilder.BuildConfiguration(null);
+            Action act = () => CacheCore.ConfigurationBuilder.BuildConfiguration(null);
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -35,7 +35,7 @@ namespace CacheManager.Tests
             string cfgName = string.Empty;
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfiguration(cfgName);
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfiguration(cfgName);
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -50,7 +50,7 @@ namespace CacheManager.Tests
             string cfgName = null;
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfiguration(cfgName);
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfiguration(cfgName);
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -68,7 +68,7 @@ namespace CacheManager.Tests
             string cfgName = Guid.NewGuid().ToString();
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfiguration(cfgName);
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfiguration(cfgName);
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -82,7 +82,7 @@ namespace CacheManager.Tests
         public void Cfg_LoadConfiguration_InvalidSectionName()
         {
             // arrange act
-            Action act = () => ConfigurationBuilder.LoadConfiguration(null, "config");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfiguration(null, "config");
 
             // assert
             act.Should().Throw<ArgumentNullException>()
@@ -94,7 +94,7 @@ namespace CacheManager.Tests
         public void Cfg_LoadConfiguration_InvalidConfigName()
         {
             // arrange act
-            Action act = () => ConfigurationBuilder.LoadConfiguration("cacheManager", string.Empty);
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfiguration("cacheManager", string.Empty);
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -109,7 +109,7 @@ namespace CacheManager.Tests
             var sectionName = Guid.NewGuid().ToString();
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfiguration(sectionName, "configName");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfiguration(sectionName, "configName");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -121,7 +121,7 @@ namespace CacheManager.Tests
         public void Cfg_LoadConfigurationFile_EmptyCfgFileName()
         {
             // arrange act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(string.Empty, "configName");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(string.Empty, "configName");
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -133,7 +133,7 @@ namespace CacheManager.Tests
         public void Cfg_LoadConfigurationFile_EmptySectionName()
         {
             // arrange act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile("file", null, "configName");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile("file", null, "configName");
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -145,7 +145,7 @@ namespace CacheManager.Tests
         public void Cfg_LoadConfigurationFile_EmptyConfigName()
         {
             // arrange act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile("file", "section", null);
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile("file", "section", null);
 
             // assert
             act.Should().Throw<ArgumentException>()
@@ -160,7 +160,7 @@ namespace CacheManager.Tests
             string fileName = "notexistingconfiguration.config";
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "configName");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -175,7 +175,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.missingName.config");
 
             // act
-            var exception = Record.Exception(() => ConfigurationBuilder.LoadConfigurationFile(fileName, "configName"));
+            var exception = Record.Exception(() => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName"));
 
             // assert
             exception.Should().NotBeNull();
@@ -189,7 +189,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.noSection.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "configName");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -206,7 +206,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.missingDefId.config");
 
             // act
-            var exception = Record.Exception(() => ConfigurationBuilder.LoadConfigurationFile(fileName, "configName"));
+            var exception = Record.Exception(() => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName"));
 
             // assert
             exception.Should().NotBeNull();
@@ -220,8 +220,8 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.invalidType.config");
 
             // act
-            var exception = Record.Exception(() => CacheFactory.FromConfiguration<object>(
-                ConfigurationBuilder.LoadConfigurationFile(fileName, "configName")));
+            var exception = Record.Exception(() => CacheCore.CacheFactory.FromConfiguration<object>(
+                CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName")));
 
             // assert
             exception.Should().NotBeNull();
@@ -235,8 +235,8 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.invalidType.config");
 
             // act
-            var cfg = ConfigurationBuilder.LoadConfigurationFile(fileName, "cacheManager2", "configName");
-            Action act = () => CacheFactory.FromConfiguration<string>(cfg);
+            var cfg = CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "cacheManager2", "configName");
+            Action act = () => CacheCore.CacheFactory.FromConfiguration<string>(cfg);
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -251,9 +251,9 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.invalidType.config");
 
             // act
-            var cfg = ConfigurationBuilder.LoadConfigurationFile(fileName, "cacheManager4", "configName");
+            var cfg = CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "cacheManager4", "configName");
 
-            Action act = () => CacheFactory.FromConfiguration<object>(cfg);
+            Action act = () => CacheCore.CacheFactory.FromConfiguration<object>(cfg);
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -268,8 +268,8 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.invalidType.config");
 
             // act
-            var exception = Record.Exception(() => CacheFactory.FromConfiguration<object>(
-                ConfigurationBuilder.LoadConfigurationFile(fileName, "configName")));
+            var exception = Record.Exception(() => CacheCore.CacheFactory.FromConfiguration<object>(
+                CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName")));
 
             // assert
             exception.Should().NotBeNull();
@@ -283,7 +283,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.emptyHandleDefinition.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "configName");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "configName");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -298,7 +298,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.managerWithoutHandles.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -313,7 +313,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.InvalidRef.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -328,7 +328,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.invalidDefExpMode.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<ConfigurationErrorsException>()
@@ -343,7 +343,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.invalidDefTimeout.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -358,7 +358,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.InvalidExpMode.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -373,7 +373,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.InvalidEnableStats.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<ConfigurationErrorsException>()
@@ -388,7 +388,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.InvalidEnablePerfCounters.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<ConfigurationErrorsException>()
@@ -403,7 +403,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.InvalidTimeout.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -418,7 +418,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.InvalidUpdateMode.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<ConfigurationErrorsException>()
@@ -433,7 +433,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.ExpirationWithoutTimeout.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -448,7 +448,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.MaxRetries.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -463,7 +463,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.RetryTimeout.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -478,7 +478,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.backplaneNameNoType.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -493,7 +493,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.backplaneTypeNoName.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -508,8 +508,8 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.backplaneTypeNoName.config");
 
             // act
-            var cfg = ConfigurationBuilder.LoadConfigurationFile(fileName, "invalidType");
-            Action act = () => new BaseCacheManager<string>(cfg);
+            var cfg = CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "invalidType");
+            Action act = () => new CacheCore.BaseCacheManager<string>(cfg);
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -524,7 +524,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.backplaneTypeNoName.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "typeNotFound");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "typeNotFound");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -539,7 +539,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.serializerType.config");
 
             // act
-            Action act = () => CacheFactory.FromConfiguration<object>(ConfigurationBuilder.LoadConfigurationFile(fileName, "c1"));
+            Action act = () => CacheCore.CacheFactory.FromConfiguration<object>(CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c1"));
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -554,7 +554,7 @@ namespace CacheManager.Tests
             string fileName = TestConfigurationHelper.GetCfgFileName(@"/Configuration/configuration.invalid.serializerType.config");
 
             // act
-            Action act = () => ConfigurationBuilder.LoadConfigurationFile(fileName, "c2");
+            Action act = () => CacheCore.ConfigurationBuilder.LoadConfigurationFile(fileName, "c2");
 
             // assert
             act.Should().Throw<InvalidOperationException>()
@@ -569,7 +569,7 @@ namespace CacheManager.Tests
             var col = new CacheManagerHandleCollection()
             {
                 Name = "name",
-                UpdateMode = CacheUpdateMode.Up,
+                UpdateMode = CacheCore.CacheUpdateMode.Up,
                 EnablePerformanceCounters = true,
                 EnableStatistics = true,
                 MaximumRetries = 10012,
@@ -582,7 +582,7 @@ namespace CacheManager.Tests
             col.Name.Should().Be("name");
             col.BackplaneName.Should().Be("backplane");
             col.BackplaneType.Should().Be(typeof(string).AssemblyQualifiedName);
-            col.UpdateMode.Should().Be(CacheUpdateMode.Up);
+            col.UpdateMode.Should().Be(CacheCore.CacheUpdateMode.Up);
             col.EnablePerformanceCounters.Should().BeTrue();
             col.EnableStatistics.Should().BeTrue();
             col.MaximumRetries.Should().Be(10012);
@@ -598,14 +598,14 @@ namespace CacheManager.Tests
             {
                 IsBackplaneSource = true,
                 Name = "name",
-                ExpirationMode = ExpirationMode.Absolute.ToString(),
+                ExpirationMode = CacheCore.ExpirationMode.Absolute.ToString(),
                 Timeout = "22m",
                 RefHandleId = "ref"
             };
 
             // assert
             col.Name.Should().Be("name");
-            col.ExpirationMode.Should().Be(ExpirationMode.Absolute.ToString());
+            col.ExpirationMode.Should().Be(CacheCore.ExpirationMode.Absolute.ToString());
             col.Timeout.Should().Be("22m");
             col.RefHandleId.Should().Be("ref");
             col.IsBackplaneSource.Should().BeTrue();
@@ -621,14 +621,14 @@ namespace CacheManager.Tests
                 Id = "id",
                 HandleType = typeof(string),
                 DefaultTimeout = "22m",
-                DefaultExpirationMode = ExpirationMode.None
+                DefaultExpirationMode = CacheCore.ExpirationMode.None
             };
 
             // assert
             col.Id.Should().Be("id");
             col.HandleType.Should().Be(typeof(string));
             col.DefaultTimeout.Should().Be("22m");
-            col.DefaultExpirationMode.Should().Be(ExpirationMode.None);
+            col.DefaultExpirationMode.Should().Be(CacheCore.ExpirationMode.None);
         }
     }
 }
