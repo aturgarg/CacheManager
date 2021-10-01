@@ -461,7 +461,7 @@ namespace Microsoft.Extensions.Configuration
             {
                 switch (knownTypeName.ToLowerInvariant())
                 {
-#if !NET461
+#if !net472
                     case KnonwSerializerBinary:
                         throw new PlatformNotSupportedException("BinaryCacheSerializer is not available on this platform");
 #else

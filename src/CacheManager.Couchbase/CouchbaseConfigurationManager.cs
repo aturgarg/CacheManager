@@ -8,7 +8,7 @@ using Couchbase.Management;
 using System.Collections.Concurrent;
 using CacheManager.Core;
 
-#if NET45
+#if net472
 using System.Configuration;
 using Couchbase.Configuration.Client.Providers;
 #endif
@@ -37,7 +37,7 @@ namespace CacheManager.Couchbase
         /// </summary>
         public const string DefaultBucketName = "default";
 
-#if NET45
+#if net472
 
         /// <summary>
         /// The section name usually used for couchbase in app/web.config.
@@ -140,7 +140,7 @@ namespace CacheManager.Couchbase
                 return configuration;
             }
 
-#if NET45
+#if net472
             var section = ConfigurationManager.GetSection(configurationKeyOrSectionName) as CouchbaseClientSection;
 
             if (section == null)

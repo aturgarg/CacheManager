@@ -9,7 +9,7 @@
       ],
       "dest": "obj/api",
       "properties": {
-        "TargetFramework": "net45"
+        "TargetFramework": "net472"
       }
     }
   ],
