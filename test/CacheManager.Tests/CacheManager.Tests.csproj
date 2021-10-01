@@ -74,7 +74,7 @@
     <PackageReference Include="FluentAssertions" Version="5.4.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <ProjectReference Include="..\..\src\CacheManager.Web\CacheManager.Web.csproj" />
     <ProjectReference Include="..\..\src\CacheManager.Memcached\CacheManager.Memcached.csproj" />
     <Reference Include="System.Web" />
