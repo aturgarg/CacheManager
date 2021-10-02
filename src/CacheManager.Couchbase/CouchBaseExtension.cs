@@ -26,8 +26,11 @@ namespace CacheManager.Couchbase
 
             //services.AddCouchbase(settings);
             //services.AddCouchbaseBucket<INamedBucketProvider>("");
-            
-            services.AddTransient<CouchbaseManager>();
+
+            //services.AddTransient<CouchbaseManager>();
+
+            CouchbaseConfigurationManager.AddConfiguration("CouchbaseClusterOptions", clusterOptions);
+
             return services;
         }
     }
