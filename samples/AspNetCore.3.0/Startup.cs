@@ -6,9 +6,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Couchbase.Core;
 
 namespace AspnetCore.WebApp
 {
+    using CacheManager.Couchbase;
+    using Couchbase;
+    using Couchbase.Extensions.DependencyInjection;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Swashbuckle.AspNetCore.Swagger;
@@ -43,6 +47,8 @@ namespace AspnetCore.WebApp
                  );
             });
 
+            services.WithCouchbaseConfiguration(Configuration);
+
             // using the new overload which adds a singleton of the configuration to services and the configure method to add logging
             // TODO: still not 100% happy with the logging part
             services.AddCacheManagerConfiguration(Configuration, cfg => cfg.WithMicrosoftLogging(LoggerFactory));
@@ -55,6 +61,8 @@ namespace AspnetCore.WebApp
 
             // any other type will be this. Configuration used will be the one defined by AddCacheManagerConfiguration earlier.
             services.AddCacheManager();
+
+            
         }
 
         public void Configure(IApplicationBuilder app)

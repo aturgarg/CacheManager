@@ -1,11 +1,28 @@
 ﻿{
   "$schema": "http://cachemanager.michaco.net/schemas/cachemanager.json#",
+  //"CouchbaseConnection": [
+  //  {
+  //    "ConnectionString": "couchbase://localhost",
+  //    "UserName": "test",
+  //    "Password": "admin@123",
+  //    "BucketName": "couchbucket1"
+  //  }
+  //],
   "cacheManagers": [
+    //{
+    //  "name": "simpleMemoryCache",
+    //  "handles": [
+    //    {
+    //      "knownType": "Dictionary"
+    //    }
+    //  ]
+    //}
     {
-      "name": "simpleMemoryCache",
+      "name": "simpleCouchBaseCache",
       "handles": [
         {
-          "knownType": "Dictionary"
+          "knownType": "Couchbase",
+          "key": "CouchbaseConnection:couchbucket1"          
         }
       ]
     }

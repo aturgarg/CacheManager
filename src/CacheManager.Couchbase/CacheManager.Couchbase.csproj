@@ -11,7 +11,8 @@
     <ProjectReference Include="..\CacheManager.Core\CacheManager.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CouchbaseNetClient" Version="2.7.1" />
+    <PackageReference Include="Couchbase.Extensions.DependencyInjection" Version="3.0.1" />
+    <PackageReference Include="CouchbaseNetClient" Version="3.0.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net4722' ">
     <Reference Include="System.Configuration" />
