@@ -48,6 +48,7 @@ namespace CacheManager.Couchbase
         /// <returns></returns>
         public async Task<ICluster> GetClusterAsync()
         {
+            // TODO : fix - Get key from Configuration
             try
             {
                 if (!_clusters.ContainsKey(_clusterOptions.ConnectionString))

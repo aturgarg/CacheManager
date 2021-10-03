@@ -9,6 +9,8 @@ using Couchbase.KeyValue;
 using Couchbase.Management.Buckets;
 using Newtonsoft.Json.Linq;
 using static CacheManager.Core.Utility.Guard;
+using Nito.AsyncEx;
+using Nito.AsyncEx.Synchronous;
 
 namespace CacheManager.Couchbase
 {
@@ -52,12 +54,11 @@ namespace CacheManager.Couchbase
                 _bucketName = nameParts[1];
             }
 
-
-            // TODO : improve
             _couchbaseManager = new CouchbaseManager(clusterOptions);
-            _bucketManager = _couchbaseManager.GetBucketManagerAsync().Result;
-            _bucket = _couchbaseManager.GetBucketAsync(_bucketName).Result;
-
+            //_bucketManager = _couchbaseManager.GetBucketManagerAsync().WaitAndUnwrapException();
+            //_bucket = _couchbaseManager.GetBucketAsync(_bucketName).WaitAndUnwrapException();
+            _bucketManager = AsyncContext.Run(() => _couchbaseManager.GetBucketManagerAsync());
+            _bucket = AsyncContext.Run(() => _couchbaseManager.GetBucketAsync(_bucketName));
         }
 
         /// <inheritdoc />
@@ -98,7 +99,7 @@ namespace CacheManager.Couchbase
         public override bool Exists(string key)
         {
             var fullKey = GetKey(key);
-            IExistsResult result = _bucket.DefaultCollection().ExistsAsync(fullKey).Result;
+            IExistsResult result = AsyncContext.Run(() => _bucket.DefaultCollection().ExistsAsync(fullKey));
             return result.Exists;
         }
 
@@ -108,7 +109,7 @@ namespace CacheManager.Couchbase
             NotNullOrWhiteSpace(region, nameof(region));
 
             var fullKey = GetKey(key, region);
-            IExistsResult result = _bucket.DefaultCollection().ExistsAsync(fullKey).Result;
+            IExistsResult result = AsyncContext.Run(() => _bucket.DefaultCollection().ExistsAsync(fullKey));
             return result.Exists;
         }
 
@@ -140,14 +141,14 @@ namespace CacheManager.Couchbase
                 {
                     var options = new InsertOptions();
                     options.Expiry(item.ExpirationTimeout);
-                    result = _bucket.DefaultCollection().InsertAsync(fullKey, item, options).Result;
+                    result = AsyncContext.Run(() => _bucket.DefaultCollection().InsertAsync(fullKey, item, options));
                 }
 
-                result = _bucket.DefaultCollection().InsertAsync(fullKey, item).Result;
+                result = AsyncContext.Run(() => _bucket.DefaultCollection().InsertAsync(fullKey, item));
             }
 
-            return (result != null && result.Cas > 0 && result.MutationToken != null && result.MutationToken.VBucketUuid > 0)
-                ? true : false;
+            return (result != null && result.Cas > 0 && result.MutationToken != null
+                        && result.MutationToken.VBucketUuid > 0);
         }
 
         /// <summary>
@@ -181,7 +182,7 @@ namespace CacheManager.Couchbase
         protected override CacheItem<TCacheValue> GetCacheItemInternal(string key, string region)
         {
             var fullkey = GetKey(key, region);
-            var result = _bucket.DefaultCollection().GetAsync(fullkey).Result;
+            var result = AsyncContext.Run(() => _bucket.DefaultCollection().GetAsync(fullkey));
 
             if (result == null)
             {
@@ -225,11 +226,11 @@ namespace CacheManager.Couchbase
             {
                 var options = new UpsertOptions();
                 options.Expiry(item.ExpirationTimeout);
-                result = _bucket.DefaultCollection().UpsertAsync(fullKey, item, options).Result;
+                result = AsyncContext.Run(() => _bucket.DefaultCollection().UpsertAsync(fullKey, item, options));
             }
             else
             {
-                result = _bucket.DefaultCollection().UpsertAsync(fullKey, item).Result;
+                result = AsyncContext.Run(() => _bucket.DefaultCollection().UpsertAsync(fullKey, item));
             }
         }
 
@@ -254,14 +255,10 @@ namespace CacheManager.Couchbase
         {
             var fullKey = GetKey(key, region);
 
-            return _bucket.DefaultCollection().RemoveAsync(fullKey)
-                .ContinueWith((action) =>
-                                { return action.IsCompleted && !action.IsFaulted; }
-                              )
-                .GetAwaiter()
-                .GetResult()
-                ;
-
+            return AsyncContext.Run(() => _bucket.DefaultCollection().RemoveAsync(fullKey)
+                                .ContinueWith((action) =>
+                                    { return action.IsCompleted && !action.IsFaulted; })
+                                );
         }
 
         private static string GetSHA256Key(string key)
