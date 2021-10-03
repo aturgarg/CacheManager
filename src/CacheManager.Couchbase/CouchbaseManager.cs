@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Couchbase;
-using Couchbase.Core.Configuration.Server;
-using Couchbase.Management.Buckets;
 using Couchbase.KeyValue;
-using CacheManager.Core.Utility;
-using Couchbase.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Couchbase.Management.Buckets;
 
 namespace CacheManager.Couchbase
 {
     /// <summary>
     /// 
     /// </summary>
-    public class CouchbaseManager
+    internal class CouchbaseManager
     {
         /// <summary>
         /// 
@@ -25,12 +18,7 @@ namespace CacheManager.Couchbase
         public const string DefaultBucketName = "default";
 
         private static object _configLock = new object();
-        //private static ConcurrentDictionary<string, ClientConfiguration> _configurations = new ConcurrentDictionary<string, ClientConfiguration>();
-        private static ConcurrentDictionary<string, ICluster> _clusters = new ConcurrentDictionary<string, ICluster>();
-        //private readonly string _configurationName;
-        //private readonly string _bucketName;
-        //private readonly string _bucketPassword;
-        //private readonly INamedBucketProvider _bucketProvider;
+        private static ConcurrentDictionary<string, ICluster> _clusters = new ConcurrentDictionary<string, ICluster>();      
         private readonly ClusterOptions _clusterOptions;
         //private readonly ICluster _cluster;
 
@@ -69,6 +57,30 @@ namespace CacheManager.Couchbase
                 }
 
                 return _clusters[_clusterOptions.ConnectionString];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static ICluster AddCluster(string key, ICluster cluster)
+        {
+            try
+            {
+                if (!_clusters.ContainsKey(key))
+                {
+                    _clusters.TryAdd(key, cluster);
+                }
+
+                return _clusters[key];
             }
             catch (Exception ex)
             {

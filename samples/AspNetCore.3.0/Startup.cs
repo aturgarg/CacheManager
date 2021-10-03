@@ -47,11 +47,15 @@ namespace AspnetCore.WebApp
                  );
             });
 
-            services.WithCouchbaseConfiguration(Configuration);
+            ////services.WithCouchbaseConfiguration(Configuration);
 
             // using the new overload which adds a singleton of the configuration to services and the configure method to add logging
             // TODO: still not 100% happy with the logging part
-            services.AddCacheManagerConfiguration(Configuration, cfg => cfg.WithMicrosoftLogging(LoggerFactory));
+            services.AddCacheManagerConfiguration(Configuration, 
+                                        cfg => cfg
+                                                .WithMicrosoftLogging(LoggerFactory)
+                                                .WithCouchbaseConfiguration(Constants.CouchbaseConfigurationFullKey, Configuration)
+                                                );
 
             // uses a refined configuration (this will not log, as we added the MS Logger only to the configuration above
             services.AddCacheManager<int>(Configuration, configure: builder => builder.WithJsonSerializer());

@@ -31,6 +31,7 @@ namespace CacheManager.Couchbase
             return _config[configurationName];
         }
 
+
         /// <summary>
         /// 
         /// </summary>

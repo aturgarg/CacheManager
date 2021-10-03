@@ -13,29 +13,6 @@ using static CacheManager.Core.Utility.Guard;
 namespace CacheManager.Couchbase
 {
     /// <summary>
-    /// Definition for what bucket should be used and optionally a bucket password.
-    /// </summary>
-    /// <seealso cref="CacheManager.Core.Internal.BaseCacheHandle{TCacheValue}" />
-    public class BucketCacheHandleAdditionalConfiguration
-    {
-        /// <summary>
-        /// Gets or sets the name of the bucket.
-        /// </summary>
-        /// <value>
-        /// The name of the bucket.
-        /// </value>
-        public string BucketName { get; set; } = Constants.DefaultBucketName;
-
-        /// <summary>
-        /// Gets or sets the bucket password.
-        /// </summary>
-        /// <value>
-        /// The bucket password.
-        /// </value>
-        public string BucketPassword { get; set; }
-    }
-
-    /// <summary>
     /// Cache handle implementation based on the couchbase .net client.
     /// </summary>
     /// <typeparam name="TCacheValue">The type of the cache value.</typeparam>
@@ -45,34 +22,18 @@ namespace CacheManager.Couchbase
         private readonly IBucketManager _bucketManager;
         private readonly IBucket _bucket;
         private readonly string _bucketName;
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BucketCacheHandle{TCacheValue}" /> class.
-        /// </summary>
-        /// <param name="managerConfiguration">The manager configuration.</param>
-        /// <param name="configuration">The cache handle configuration.</param>       
-        /// <param name="loggerFactory">The logger factory.</param>
-        /// <exception cref="System.InvalidOperationException">If <c>configuration.HandleName</c> is not valid.</exception>
-        public BucketCacheHandle(
-            ICacheManagerConfiguration managerConfiguration,
-            CacheHandleConfiguration configuration,
-            ILoggerFactory loggerFactory)
-            : this(managerConfiguration, configuration, loggerFactory, new BucketCacheHandleAdditionalConfiguration())
-        {
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BucketCacheHandle{TCacheValue}" /> class.
         /// </summary>
         /// <param name="managerConfiguration">The manager configuration.</param>
         /// <param name="configuration">The cache handle configuration.</param>        
-        /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="additionalSettings">The additional settings.</param>
+        /// <param name="loggerFactory">The logger factory.</param>       
         /// <exception cref="System.InvalidOperationException">If <c>configuration.HandleName</c> is not valid.</exception>
         public BucketCacheHandle(
             ICacheManagerConfiguration managerConfiguration,
             CacheHandleConfiguration configuration,
-            ILoggerFactory loggerFactory,
-            BucketCacheHandleAdditionalConfiguration additionalSettings)
+            ILoggerFactory loggerFactory)
             : base(managerConfiguration, configuration)
         {
             NotNull(configuration, nameof(configuration));
@@ -80,13 +41,11 @@ namespace CacheManager.Couchbase
 
             Logger = loggerFactory.CreateLogger(this);
 
-            ClusterOptions clusterOptions = CouchbaseConfigurationManager.GetConfiguration("CouchbaseClusterOptions");
+            ClusterOptions clusterOptions = CouchbaseConfigurationManager.GetConfiguration(Constants.CouchbaseConfigurationFullKey);
 
             // we can configure the bucket name by having "<configKey>:<bucketName>" as handle's
             // this should only be used in 100% by app/web.config based configuration
             var nameParts = configuration.Key.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-
-            var configurationName = nameParts.Length > 0 ? nameParts[0] : Guid.NewGuid().ToString();
 
             if (nameParts.Length >= 2)
             {
@@ -302,7 +261,7 @@ namespace CacheManager.Couchbase
                 .GetAwaiter()
                 .GetResult()
                 ;
-          
+
         }
 
         private static string GetSHA256Key(string key)

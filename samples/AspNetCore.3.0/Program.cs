@@ -20,9 +20,7 @@ namespace AspnetCore.WebApp
                 .ConfigureAppConfiguration((ctx, builder) =>
                 {
                     builder
-                    .AddJsonFile("cache.json", optional: false)
-                    .AddJsonFile("appsettings.json", optional: false)
-                    .AddJsonFile("appsettings.Development.json", optional: false)
+                    .AddJsonFile("cache.json", optional: false)                    
                     ;
                 });
     }
